@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEAM VAR — Admin Panel</title>
+<style>
+:root {
+  --bg:#17120f; --panel:#211914; --panel2:#2b2019;
+  --orange:#e87932; --gold:#e9b65c; --text:#f5e9d8;
+  --muted:#a99887; --border:#49352a; --red:#df6258;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif;display:flex;min-height:100vh}
+button,input,textarea,select{font:inherit}
+.sidebar{width:245px;background:#1e1713;border-right:1px solid var(--border);
+padding:25px 16px;position:fixed;inset:0 auto 0 0}
+.brand{font-size:22px;font-weight:900;color:var(--gold);padding:10px}
+.brand small{display:block;font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:5px}
+.nav{margin-top:35px}
+.nav button{display:block;width:100%;text-align:left;background:none;
+border:0;color:var(--muted);padding:14px;border-radius:9px;
+cursor:pointer;margin:5px 0}
+.nav button.active,.nav button:hover{background:#38251a;color:var(--gold)}
+.main{margin-left:245px;width:calc(100% - 245px);padding:30px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.top h1{font-size:25px;margin:0}
+.status{color:#83c99b;font-size:12px}
+.page{display:none}.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.card{background:var(--panel);border:1px solid var(--border);
+border-radius:13px;padding:20px;margin-bottom:18px}
+.stat{font-size:28px;font-weight:bold;color:var(--gold);margin-top:12px}
+.muted{color:var(--muted);font-size:13px}
+h2{font-size:18px;margin:0 0 20px}
+h3{font-size:15px;margin:0 0 8px}
+label{display:block;color:var(--muted);font-size:12px;margin:15px 0 7px}
+input,textarea,select{width:100%;padding:12px;background:#17120f;
+border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none}
+input:focus,textarea:focus{border-color:var(--orange)}
+textarea{min-height:100px;resize:vertical}
+.btn{border:0;padding:11px 16px;border-radius:8px;cursor:pointer;
+background:var(--orange);color:#fff;font-weight:bold;margin-top:15px}
+.btn.secondary{background:#49352a;color:var(--text)}
+.btn.danger{background:#71342e}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.member{display:flex;justify-content:space-between;align-items:center;
+gap:10px;padding:13px 0;border-bottom:1px solid var(--border)}
+.member:last-child{border:0}
+.member strong{display:block;margin-bottom:5px}
+.banner-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border)}
+.banner-item:last-child{border:0}
+.banner-item img{width:128px;height:76px;object-fit:cover;border-radius:8px;background:#17120f}
+.banner-controls{flex:1;min-width:0}
+.banner-controls strong{display:block;margin-bottom:8px}
+.banner-controls input[type=file]{padding:8px}
+.tag{font-size:11px;color:var(--gold)}
+.notice{color:var(--muted);font-size:12px;line-height:1.6;margin-top:12px}
+@media(max-width:750px){
+ body{display:block}.sidebar{position:relative;width:100%;height:auto}
+ .nav{display:flex;overflow-x:auto;margin-top:15px}
+ .nav button{min-width:max-content}
+ .main{margin:0;width:100%;padding:18px}
+ .grid{grid-template-columns:1fr}
+ .top{align-items:flex-start;gap:10px;flex-direction:column}
+ .banner-item{align-items:flex-start;flex-wrap:wrap}
+ .banner-item img{width:100%;height:auto;max-height:220px}
+ .banner-controls{width:100%}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">TEAM VAR <small>CONTROL CENTER</small></div>
+  <div class="nav">
+    <button class="active" data-page="dashboard">▦ Dashboard</button>
+    <button data-page="announcement">▤ Announcement</button>
+    <button data-page="world">◈ World Settings</button>
+    <button data-page="members">♟ Team Management</button>
+    <button data-page="contact">✉ Contact Settings</button>
+    <button data-page="data">⚙ Data Management</button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="top">
+    <div>
+      <h1 id="pageTitle">Dashboard</h1>
+      <div class="muted">TEAM VAR Website Administration</div>
+    </div>
+    <div class="status">● LOCAL ADMIN PANEL</div>
+  </header>
+
+  <section class="page active" id="dashboard">
+    <div class="grid">
+      <div class="card"><div class="muted">WORLD NAME</div><div class="stat" id="statWorld">VARCN3</div></div>
+      <div class="card"><div class="muted">PLAYER COUNT</div><div class="stat" id="statPlayers">0</div></div>
+      <div class="card"><div class="muted">TEAM MEMBERS</div><div class="stat" id="statMembers">0</div></div>
+    </div>
+    <div class="card">
+      <h2>Welcome to TEAM VAR Admin</h2>
+      <p class="muted">Kelola informasi website TEAM VAR melalui panel ini.</p>
+      <p class="notice">Perubahan disimpan di browser menggunakan localStorage. Panel ini belum menggunakan database atau sistem login server.</p>
+    </div>
+  </section>
+
+  <section class="page" id="announcement">
+    <div class="card">
+      <h2>Banner Informasi</h2>
+      <label>Judul banner</label>
+      <input id="annTitle" placeholder="Judul pengumuman">
+      <label>Keterangan banner</label>
+      <textarea id="annDesc" placeholder="Isi pengumuman..."></textarea>
+      <label>Keterangan Maxreff Teamvar</label>
+      <textarea id="maxreffDesc" placeholder="Keterangan maxreff Teamvar..."></textarea>
+      <label>Keterangan kolom ROOM KIRI</label>
+      <input id="maxreffItem1" placeholder="25 DIAMOND LOCK">
+      <label>Keterangan kolom KANAN ATAS</label>
+      <input id="maxreffItem2" placeholder="75 DIAMOND LOCK">
+      <label>Keterangan kolom KANAN BAWAH</label>
+      <input id="maxreffItem3" placeholder="3 BLUE GEM LOCK">
+      <label>Keterangan kolom BJ</label>
+      <input id="maxreffItem4" placeholder="NO MAXREFF">
+      <button class="btn" onclick="saveAnnouncement()">Simpan Informasi</button>
+    </div>
+    <div class="card">
+      <h2>Gambar Banner / Galeri</h2>
+      <p class="notice">Pilih gambar untuk mengganti banner, atau tambahkan beberapa gambar baru. Gambar diperkecil otomatis.</p>
+      <div id="bannerList"></div>
+      <label>Tambah gambar banner</label>
+      <input id="bannerFiles" type="file" accept="image/*" multiple onchange="addBannerImages(event)">
+    </div>
+  </section>
+
+  <section class="page" id="world">
+    <div class="card">
+      <h2>World Configuration</h2>
+      <label>World Name</label>
+      <input id="worldName" placeholder="VARCN3">
+      <label>Player Count</label>
+      <input id="playerCount" type="number" min="0" placeholder="0">
+      <button class="btn" onclick="saveWorld()">Save World Settings</button>
+    </div>
+  </section>
+
+  <section class="page" id="members">
+    <div class="card">
+      <h2>Add Team Member</h2>
+      <label>Member Name</label>
+      <input id="memberName" placeholder="Nama anggota">
+      <label>Role</label>
+      <select id="memberRole">
+        <option>Leader</option>
+        <option>Inti Access</option>
+        <option>Inti Problem</option>
+        <option>Inti Builder</option>
+        <option>Member</option>
+      </select>
+      <label>Description</label>
+      <input id="memberDesc" placeholder="Deskripsi anggota">
+      <button class="btn" onclick="addMember()">Tambah Anggota</button>
+    </div>
+    <div class="card">
+      <h2>Team Members List</h2>
+      <div id="memberList"></div>
+    </div>
+  </section>
+
+  <section class="page" id="contact">
+    <div class="card">
+      <h2>Contact Configuration</h2>
+      <label>WhatsApp Number (international format)</label>
+      <input id="whatsapp" placeholder="628xxxxxxxxxx atau https://wa.me/...">
+      <label>Link Instagram</label>
+      <input id="instagram" type="url" placeholder="https://instagram.com/...">
+      <label>Link TikTok</label>
+      <input id="tiktok" type="url" placeholder="https://tiktok.com/@...">
+      <label>Link Discord</label>
+      <input id="discord" type="url" placeholder="https://discord.gg/...">
+      <label>Link YouTube</label>
+      <input id="youtube" type="url" placeholder="https://youtube.com/@...">
+      <label>Link Admin VAR</label>
+      <input id="adminLink" type="url" placeholder="https://wa.me/...">
+      <button class="btn" onclick="saveContact()">Simpan Tautan</button>
+    </div>
+  </section>
+
+  <section class="page" id="data">
+    <div class="card">
+      <h2>Data Management</h2>
+      <p class="muted">Backup atau pindahkan pengaturan panel melalui file JSON.</p>
+      <div class="actions">
+        <button class="btn" onclick="exportData()">Export JSON</button>
+        <button class="btn secondary" onclick="document.getElementById('importFile').click()">Import JSON</button>
+        <button class="btn danger" onclick="resetData()">Reset Settings</button>
+      </div>
+      <input id="importFile" type="file" accept=".json" hidden onchange="importData(event)">
+    </div>
+  </section>
+</main>
+
+<script>
+const defaults = {
+  announcement:{
+    title:"Informasi & Pengumuman",
+    description:"Geser untuk melihat Event, panduan report problem, LINK TEAM VAR.",
+    maxreff:"",
+    maxreffItems:["25 DIAMOND LOCK","75 DIAMOND LOCK","3 BLUE GEM LOCK","NO MAXREFF"],
+    bannerImages:["foto banner/rules-team-var.jpeg","foto banner/report-problem.jpeg","foto banner/team-var-v3.jpeg"]
+  },
+  world:{name:"VARCN3",players:0},
+  contact:{
+    whatsapp:"6289504282618",
+    instagram:"https://www.instagram.com/teamvar_gtid/",
+    tiktok:"https://www.tiktok.com/@teamvargete?is_from_webapp=1&sender_device=pc",
+    discord:"https://discord.gg/VEjXXXj56",
+    youtube:"https://www.youtube.com/@opaljackone",
+    admin:"https://wa.me/6289504282618?text=BUYACC"
+  },
+  members:[
+    {name:"OPAL",role:"Leader",description:"",photo:"foto inti/OPAL.jpeg"},
+    {name:"KALZ",role:"Leader",description:"",photo:"KALZ1.png"},
+    {name:"FAD",role:"Leader",description:"",photo:"foto inti/FAD1.png"},
+    {name:"KOTEL",role:"Inti Access",description:"",photo:"foto inti/KOTEL.png"},
+    {name:"ARYA",role:"Inti Access",description:"",photo:"foto inti/arya.jpeg"},
+    {name:"ARYA WINATA",role:"Inti Access",description:"",photo:"foto inti/winata1.png"},
+    {name:"ATHALLAH",role:"Inti Access",description:"",photo:"foto inti/aufa.png"},
+    {name:"ABRAHAM",role:"Inti Problem",description:"",photo:""},
+    {name:"INTI BUILDER",role:"Inti Builder",description:"Foto menyusul",photo:""}
+  ]
+};
+function normalizeMaxreffItems(items){
+  return defaults.announcement.maxreffItems.map((fallback,index)=>
+    Array.isArray(items)&&typeof items[index]==="string" ? items[index] : fallback
+  );
+}
+function resolveTeamvarImage(source){
+  const paths={
+    "assets/rules-team-var.jpeg":"foto banner/rules-team-var.jpeg",
+    "assets/report-problem.jpeg":"foto banner/report-problem.jpeg",
+    "assets/team-var-v3.jpeg":"foto banner/team-var-v3.jpeg",
+    "OPAL.jpeg":"foto inti/OPAL.jpeg",
+    "KALZ.jpeg":"foto inti/KALZ.jpeg",
+    "KALZ1.png":"KALZ1.png",
+    "FAD.jpeg":"foto inti/FAD1.png",
+    "FAD1.png":"foto inti/FAD1.png",
+    "foto inti/FAD1.png":"foto inti/FAD1.png",
+    "arya.jpeg":"foto inti/arya.jpeg",
+    "winata.png":"foto inti/winata.png",
+    "winata1.png":"foto inti/winata1.png",
+    "aufa.png":"foto inti/aufa.png",
+    "abraham.png":"foto inti/abraham.png",
+    "KOTEL.png":"foto inti/KOTEL.png",
+    "dl1.png":"foto inti/asset gambar/dl1.png",
+    "bgl.png":"foto inti/asset gambar/bgl.png"
+  };
+  const normalized=String(source||"").replace(/\\/g,"/");
+  return paths[normalized]||source;
+}
+function normalizeBannerImages(images){
+  const validImages=Array.isArray(images)
+    ? images.filter(image=>typeof image==="string"&&image.trim())
+    : [];
+  return validImages.length
+    ? validImages.map(resolveTeamvarImage)
+    : [...defaults.announcement.bannerImages];
+}
+const oldStarterMembers=[
+  {name:"Leader",role:"Leader",description:"TEAM VAR Leader"},
+  {name:"Inti Access",role:"Inti Access",description:"TEAM VAR"},
+  {name:"Inti Problem",role:"Inti Problem",description:"TEAM VAR"},
+  {name:"Inti Builder",role:"Inti Builder",description:"TEAM VAR"}
+];
+
+let data;
+try {
+  const saved = JSON.parse(localStorage.getItem("teamvar_admin"));
+  const savedInstagram=String(saved&&saved.contact&&saved.contact.instagram||"");
+  const savedMembers=saved&&Array.isArray(saved.members)?saved.members:[];
+  const hasOldStarterMembers=savedMembers.length===oldStarterMembers.length&&
+    savedMembers.every((member,index)=>member&&member.name===oldStarterMembers[index].name&&
+      member.role===oldStarterMembers[index].role&&member.description===oldStarterMembers[index].description);
+  data = saved ? {
+    ...defaults,
+    ...saved,
+    announcement:{
+      ...defaults.announcement,
+      ...saved.announcement,
+      maxreffItems:normalizeMaxreffItems(saved.announcement&&saved.announcement.maxreffItems),
+      bannerImages:normalizeBannerImages(saved.announcement&&saved.announcement.bannerImages)
+    },
+    world:{...defaults.world,...saved.world},
+    contact:{
+      ...defaults.contact,
+      ...saved.contact,
+      instagram:savedInstagram
+        ? (/^https?:\/\//i.test(savedInstagram)
+          ? savedInstagram
+          : `https://www.instagram.com/${savedInstagram.replace(/^@/,"")}/`)
+        : defaults.contact.instagram
+    },
+    members:hasOldStarterMembers||savedMembers.length===0
+      ? defaults.members.map(member=>({...member}))
+      : savedMembers.map(member=>{
+      const savedName=String(member.name||"");
+      const savedRole=String(member.role||"Member");
+      const name=savedRole==="Inti Problem"&&savedName==="INTI PROBLEM"
+        ?"ABRAHAM"
+        :savedRole==="Inti Access"&&savedName==="INTI ACCESS 01"
+          ?"KOTEL"
+        :savedRole==="Inti Access"&&savedName==="INTI ACCESS 02"
+          ?"ARYA"
+          :savedRole==="Inti Access"&&savedName==="INTI ACCESS 03"
+            ?"ARYA WINATA"
+            :savedName;
+      const description=String(member.description||"");
+      const defaultPhoto=name==="INTI ACCESS 02"||name==="ARYA"
+        ?"foto inti/arya.jpeg"
+        :name==="INTI ACCESS 03"||name==="ARYA WINATA"?"foto inti/winata1.png"
+        :name==="INTI ACCESS 01"||name==="KOTEL"?"foto inti/KOTEL.png"
+        :"";
+      const isDefaultPhotoPlaceholder=!!defaultPhoto&&
+        !String(member.photo||"").trim()&&description==="Foto menyusul";
+      return {
+        name,
+        role:String(member.role||"Member"),
+        description:isDefaultPhotoPlaceholder?"":description,
+        photo:savedRole==="Inti Problem"
+          ?""
+          :name==="KALZ"
+          ?"KALZ1.png"
+          :name==="INTI ACCESS 01"||name==="KOTEL"
+            ?"foto inti/KOTEL.png"
+          :name==="INTI ACCESS 03"||name==="ARYA WINATA"
+            ?"foto inti/winata1.png"
+            :isDefaultPhotoPlaceholder
+              ?defaultPhoto
+              :String(resolveTeamvarImage(member.photo||""))
+      };
+    })
+  } : structuredClone(defaults);
+} catch {
+  data = structuredClone(defaults);
+}
+
+function saveData(){
+  try {
+    localStorage.setItem("teamvar_admin",JSON.stringify(data));
+    render();
+    return true;
+  } catch(error) {
+    console.error("Gagal menyimpan pengaturan TEAM VAR:",error);
+    notify("Pengaturan gagal disimpan. Penyimpanan browser mungkin penuh atau tidak tersedia.");
+    return false;
+  }
+}
+function notify(message){alert(message)}
+function render(){
+  document.getElementById("statWorld").textContent=data.world.name;
+  document.getElementById("statPlayers").textContent=data.world.players;
+  document.getElementById("statMembers").textContent=data.members.length;
+  document.getElementById("annTitle").value=data.announcement.title;
+  document.getElementById("annDesc").value=data.announcement.description;
+  document.getElementById("maxreffDesc").value=data.announcement.maxreff;
+  data.announcement.maxreffItems.forEach((description,index)=>{
+    document.getElementById(`maxreffItem${index+1}`).value=description;
+  });
+  renderBannerList();
+  document.getElementById("worldName").value=data.world.name;
+  document.getElementById("playerCount").value=data.world.players;
+  document.getElementById("whatsapp").value=data.contact.whatsapp;
+  document.getElementById("instagram").value=data.contact.instagram;
+  document.getElementById("tiktok").value=data.contact.tiktok;
+  document.getElementById("discord").value=data.contact.discord;
+  document.getElementById("youtube").value=data.contact.youtube;
+  document.getElementById("adminLink").value=data.contact.admin;
+
+  const list=document.getElementById("memberList");
+  list.replaceChildren();
+  data.members.forEach((member,index)=>{
+    const row=document.createElement("div");
+    row.className="member";
+    const info=document.createElement("div");
+    const name=document.createElement("strong");
+    name.textContent=member.name;
+    const role=document.createElement("span");
+    role.className="tag";
+    role.textContent=member.role;
+    const desc=document.createElement("div");
+    desc.className="muted";
+    desc.textContent=member.description;
+    info.append(name,role,desc);
+
+    const actions=document.createElement("div");
+    actions.className="actions";
+    const photo=document.createElement("input");
+    photo.type="file";
+    photo.accept="image/*";
+    photo.setAttribute("aria-label","Pilih foto "+member.name);
+    photo.addEventListener("change",event=>saveMemberPhoto(index,event));
+    const edit=document.createElement("button");
+    edit.className="btn secondary";
+    edit.textContent="Edit";
+    edit.onclick=()=>editMember(index);
+    const removePhoto=document.createElement("button");
+    removePhoto.className="btn secondary";
+    removePhoto.textContent="Hapus foto";
+    removePhoto.onclick=()=>{data.members[index].photo="";saveData();};
+    const del=document.createElement("button");
+    del.className="btn danger";
+    del.textContent="Delete";
+    del.onclick=()=>deleteMember(index);
+    actions.append(photo,edit,removePhoto,del);
+    row.append(info,actions);
+    list.append(row);
+  });
+}
+function renderBannerList(){
+  const list=document.getElementById("bannerList");
+  list.replaceChildren();
+  data.announcement.bannerImages.forEach((source,index)=>{
+    const row=document.createElement("div");
+    row.className="banner-item";
+    const preview=document.createElement("img");
+    preview.src=source;
+    preview.alt=`Pratinjau banner ${index+1}`;
+    const controls=document.createElement("div");
+    controls.className="banner-controls";
+    const title=document.createElement("strong");
+    title.textContent=`Banner ${index+1}`;
+    const replace=document.createElement("input");
+    replace.type="file";
+    replace.accept="image/*";
+    replace.setAttribute("aria-label",`Ganti gambar banner ${index+1}`);
+    replace.addEventListener("change",event=>replaceBannerImage(index,event));
+    const remove=document.createElement("button");
+    remove.type="button";
+    remove.className="btn danger";
+    remove.textContent="Hapus banner";
+    remove.disabled=data.announcement.bannerImages.length===1;
+    remove.onclick=()=>removeBannerImage(index);
+    controls.append(title,replace,remove);
+    row.append(preview,controls);
+    list.append(row);
+  });
+}
+function saveAnnouncement(){
+  data.announcement={
+    title:document.getElementById("annTitle").value,
+    description:document.getElementById("annDesc").value,
+    maxreff:document.getElementById("maxreffDesc").value,
+    maxreffItems:[1,2,3,4].map(index=>document.getElementById(`maxreffItem${index}`).value),
+    bannerImages:data.announcement.bannerImages
+  };
+  if(saveData())notify("Informasi berhasil disimpan!");
+}
+function saveWorld(){
+  const players=Number(document.getElementById("playerCount").value);
+  if(!Number.isInteger(players)||players<0)return notify("Player count tidak valid.");
+  data.world={
+    name:document.getElementById("worldName").value.trim(),
+    players
+  };
+  if(!data.world.name)return notify("World name tidak boleh kosong.");
+  if(saveData())notify("Pengaturan dunia berhasil disimpan!");
+}
+function addMember(){
+  const name=document.getElementById("memberName").value.trim();
+  const role=document.getElementById("memberRole").value;
+  const description=document.getElementById("memberDesc").value.trim();
+  if(!name)return notify("Masukkan nama anggota.");
+  data.members.push({name,role,description,photo:""});
+  document.getElementById("memberName").value="";
+  document.getElementById("memberDesc").value="";
+  if(saveData())notify("Anggota berhasil ditambahkan!");
+}
+function editMember(index){
+  const member=data.members[index];
+  const name=prompt("Nama anggota:",member.name);
+  if(name===null)return;
+  const role=prompt("Role (Leader, Inti Access, Inti Problem, Inti Builder):",member.role);
+  if(role===null)return;
+  const description=prompt("Deskripsi:",member.description);
+  if(description===null)return;
+  if(!name.trim())return notify("Nama tidak boleh kosong.");
+  if(!role.trim())return notify("Role tidak boleh kosong.");
+  data.members[index]={...member,name:name.trim(),role:role.trim(),description:description.trim()};
+  saveData();
+}
+function compressImage(file,maxSize){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error("File gambar gagal dibaca."));
+    reader.onload=()=>{
+      const image=new Image();
+      image.onerror=()=>reject(new Error("File gambar tidak dapat dibuka."));
+      image.onload=()=>{
+        try{
+          const scale=Math.min(1,maxSize/Math.max(image.width,image.height));
+          const canvas=document.createElement("canvas");
+          canvas.width=Math.max(1,Math.round(image.width*scale));
+          canvas.height=Math.max(1,Math.round(image.height*scale));
+          const context=canvas.getContext("2d");
+          if(!context)return reject(new Error("Gambar gagal diproses oleh browser."));
+          context.drawImage(image,0,0,canvas.width,canvas.height);
+          resolve(canvas.toDataURL("image/webp",0.78));
+        }catch(error){
+          reject(error);
+        }
+      };
+      image.src=String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function saveMemberPhoto(index,event){
+  const file=event.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith("image/"))return notify("Pilih file gambar yang valid.");
+  try{
+    data.members[index].photo=await compressImage(file,700);
+    if(saveData())notify("Foto anggota berhasil disimpan.");
+  }catch(error){
+    console.error("Gagal memproses foto anggota:",error);
+    notify(error.message);
+  }
+}
+async function addBannerImages(event){
+  const files=[...event.target.files];
+  if(!files.length)return;
+  if(files.some(file=>!file.type.startsWith("image/"))){
+    event.target.value="";
+    return notify("Pilih file gambar yang valid.");
+  }
+  try{
+    const images=[];
+    for(const file of files)images.push(await compressImage(file,1100));
+    data.announcement.bannerImages.push(...images);
+    if(saveData())notify(`${images.length} gambar banner berhasil ditambahkan.`);
+  }catch(error){
+    console.error("Gagal memproses gambar banner:",error);
+    notify(error.message);
+  }finally{
+    event.target.value="";
+  }
+}
+async function replaceBannerImage(index,event){
+  const file=event.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith("image/")){
+    event.target.value="";
+    return notify("Pilih file gambar yang valid.");
+  }
+  try{
+    data.announcement.bannerImages[index]=await compressImage(file,1100);
+    if(saveData())notify("Gambar banner berhasil diganti.");
+  }catch(error){
+    console.error("Gagal memproses gambar banner:",error);
+    notify(error.message);
+  }finally{
+    event.target.value="";
+  }
+}
+function removeBannerImage(index){
+  if(data.announcement.bannerImages.length===1)return notify("Minimal harus ada satu gambar banner.");
+  if(!confirm("Hapus banner ini?"))return;
+  data.announcement.bannerImages.splice(index,1);
+  saveData();
+}
+function deleteMember(index){
+  if(data.members.length===1)return notify("Minimal harus ada satu anggota di struktur team.");
+  if(!confirm("Hapus anggota ini?"))return;
+  data.members.splice(index,1);
+  saveData();
+}
+function saveContact(){
+  data.contact={
+    whatsapp:document.getElementById("whatsapp").value.trim(),
+    instagram:document.getElementById("instagram").value.trim(),
+    tiktok:document.getElementById("tiktok").value.trim(),
+    discord:document.getElementById("discord").value.trim(),
+    youtube:document.getElementById("youtube").value.trim(),
+    admin:document.getElementById("adminLink").value.trim()
+  };
+  if(saveData())notify("Tautan berhasil disimpan!");
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="teamvar-settings.json";a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const imported=JSON.parse(reader.result);
+      if(!imported.announcement||!imported.world||
+         !imported.contact||!Array.isArray(imported.members)||
+         imported.members.length===0||
+         !imported.members.every(member=>member&&typeof member.name==="string"&&typeof member.role==="string"))
+        throw new Error("Format tidak sesuai");
+      data={
+        ...defaults,...imported,
+        announcement:{
+          ...defaults.announcement,
+          ...imported.announcement,
+          maxreffItems:normalizeMaxreffItems(imported.announcement.maxreffItems),
+          bannerImages:normalizeBannerImages(imported.announcement.bannerImages)
+        },
+        world:{...defaults.world,...imported.world},
+        contact:{...defaults.contact,...imported.contact},
+        members:imported.members.map(member=>({
+          name:member.name,role:member.role,
+          description:String(member.description||""),
+          photo:String(resolveTeamvarImage(member.photo||""))
+        }))
+      };
+      if(saveData())notify("Data berhasil diimport!");
+    }catch(error){notify("File JSON tidak valid.");}
+  };
+  reader.readAsText(file);
+}
+function resetData(){
+  if(!confirm("Reset semua pengaturan ke default?"))return;
+  data=structuredClone(defaults);
+  if(saveData())notify("Pengaturan berhasil direset.");
+}
+
+document.querySelectorAll(".nav button").forEach(button=>{
+  button.addEventListener("click",()=>{
+    document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    button.classList.add("active");
+    document.getElementById(button.dataset.page).classList.add("active");
+    document.getElementById("pageTitle").textContent=button.textContent.trim();
+  });
+});
+render();
+</script>
+</body>
+</html>
