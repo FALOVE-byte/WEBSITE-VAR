@@ -375,7 +375,27 @@ footer{border-top:1px solid #ffcf4730;padding:28px 0;color:#d9b69a;font-size:.88
 </section>
 </main>
 <footer><div class="container footer-row"><div>© <span id="year"></span> <b>TEAM VAR</b>. All rights reserved.</div><div>Team Trusted Number 1</div></div></footer>
-<script>
+<script type="module">
+let publishedSettings=null;
+const settingsSources=[
+ 'https://adminpanelvaar.netlify.app/api/settings',
+ 'teamvar-settings.json'
+];
+for(const source of settingsSources){
+ try{
+  const response=await fetch(source,{cache:'no-store'});
+  if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  const settings=await response.json();
+  if(!settings||!settings.announcement||!settings.world||!settings.contact||
+   !Array.isArray(settings.members)||
+   !settings.members.every(member=>member&&typeof member.name==='string'&&typeof member.role==='string'))
+   throw new Error('Format pengaturan tidak valid');
+  publishedSettings=settings;
+  break;
+ }catch(error){
+  console.warn(`Pengaturan TEAM VAR dari ${source} tidak dapat dimuat:`,error);
+ }
+}
 let teamvarWorldName='VARCN3';
 function resolveTeamvarImage(source){
  const paths={
@@ -404,9 +424,11 @@ function applyTeamvarSettings(){
  document.querySelectorAll('#galleryTrack img,.ambassador-photo,.diamond-lock-icon,.gem-lock-icon').forEach(image=>{
   image.src=resolveTeamvarImage(image.getAttribute('src'));
  });
- let settings;
- try{settings=JSON.parse(localStorage.getItem('teamvar_admin')||'null');}
- catch(error){console.error('Pengaturan TEAM VAR tidak dapat dibaca:',error);return;}
+ let settings=publishedSettings;
+ if(!settings){
+  try{settings=JSON.parse(localStorage.getItem('teamvar_admin')||'null');}
+  catch(error){console.error('Pengaturan TEAM VAR tidak dapat dibaca:',error);return;}
+ }
  if(!settings)return;
 
  const announcement=settings.announcement||{};

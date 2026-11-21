@@ -1,0 +1,86 @@
+{
+  "announcement": {
+    "title": "Informasi & Pengumuman",
+    "description": "Geser untuk melihat Event, panduan report problem, LINK TEAM VAR.",
+    "maxreff": "",
+    "maxreffItems": [
+      "25 DIAMOND LOCK",
+      "75 DIAMOND LOCK",
+      "3 BLUE GEM LOCK",
+      "NO MAXREFF"
+    ],
+    "bannerImages": [
+      "foto banner/rules-team-var.jpeg",
+      "foto banner/report-problem.jpeg",
+      "foto banner/team-var-v3.jpeg"
+    ]
+  },
+  "world": {
+    "name": "VARCN3",
+    "players": 0
+  },
+  "contact": {
+    "whatsapp": "6289504282618",
+    "instagram": "https://www.instagram.com/teamvar_gtid/",
+    "tiktok": "https://www.tiktok.com/@teamvargete?is_from_webapp=1&sender_device=pc",
+    "discord": "https://discord.gg/VEjXXXj56",
+    "youtube": "https://www.youtube.com/@opaljackone",
+    "admin": "https://wa.me/6289504282618?text=BUYACC"
+  },
+  "members": [
+    {
+      "name": "OPAL",
+      "role": "Leader",
+      "description": "",
+      "photo": "foto inti/OPAL.jpeg"
+    },
+    {
+      "name": "KALZ",
+      "role": "Leader",
+      "description": "",
+      "photo": "KALZ1.png"
+    },
+    {
+      "name": "FAD",
+      "role": "Leader",
+      "description": "",
+      "photo": "foto inti/FAD1.png"
+    },
+    {
+      "name": "KOTEL",
+      "role": "Inti Access",
+      "description": "",
+      "photo": "foto inti/KOTEL.png"
+    },
+    {
+      "name": "ARYA",
+      "role": "Inti Access",
+      "description": "",
+      "photo": "foto inti/arya.jpeg"
+    },
+    {
+      "name": "ARYA WINATA",
+      "role": "Inti Access",
+      "description": "",
+      "photo": "foto inti/winata1.png"
+    },
+    {
+      "name": "ATHALLAH",
+      "role": "Inti Access",
+      "description": "",
+      "photo": "foto inti/aufa.png"
+    },
+    {
+      "name": "ABRAHAM",
+      "role": "Inti Problem",
+      "description": "",
+      "photo": ""
+    },
+    {
+      "name": "INTI BUILDER",
+      "role": "Inti Builder",
+      "description": "Foto menyusul",
+      "photo": ""
+    }
+  ]
+}
