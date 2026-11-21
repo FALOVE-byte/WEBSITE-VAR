@@ -35,34 +35,16 @@
       "photo": "foto inti/OPAL.jpeg"
     },
     {
-      "name": "KALZ",
-      "role": "Leader",
-      "description": "",
-      "photo": "KALZ1.png"
-    },
-    {
       "name": "FAD",
       "role": "Leader",
       "description": "",
       "photo": "foto inti/FAD1.png"
     },
     {
-      "name": "KOTEL",
-      "role": "Inti Access",
-      "description": "",
-      "photo": "foto inti/KOTEL.png"
-    },
-    {
       "name": "ARYA",
       "role": "Inti Access",
       "description": "",
       "photo": "foto inti/arya.jpeg"
-    },
-    {
-      "name": "ARYA WINATA",
-      "role": "Inti Access",
-      "description": "",
-      "photo": "foto inti/winata1.png"
     },
     {
       "name": "ATHALLAH",

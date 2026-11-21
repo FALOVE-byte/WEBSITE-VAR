@@ -223,11 +223,8 @@ const defaults = {
   },
   members:[
     {name:"OPAL",role:"Leader",description:"",photo:"foto inti/OPAL.jpeg"},
-    {name:"KALZ",role:"Leader",description:"",photo:"KALZ1.png"},
     {name:"FAD",role:"Leader",description:"",photo:"foto inti/FAD1.png"},
-    {name:"KOTEL",role:"Inti Access",description:"",photo:"foto inti/KOTEL.png"},
     {name:"ARYA",role:"Inti Access",description:"",photo:"foto inti/arya.jpeg"},
-    {name:"ARYA WINATA",role:"Inti Access",description:"",photo:"foto inti/winata1.png"},
     {name:"ATHALLAH",role:"Inti Access",description:"",photo:"foto inti/aufa.png"},
     {name:"ABRAHAM",role:"Inti Problem",description:"",photo:""},
     {name:"INTI BUILDER",role:"Inti Builder",description:"Foto menyusul",photo:""}
@@ -280,7 +277,9 @@ let data;
 try {
   const saved = JSON.parse(localStorage.getItem("teamvar_admin"));
   const savedInstagram=String(saved&&saved.contact&&saved.contact.instagram||"");
-  const savedMembers=saved&&Array.isArray(saved.members)?saved.members:[];
+  const removedMembers=new Set(["KALZ","KOTEL","ARYA WINATA","INTI ACCESS 01","INTI ACCESS 03"]);
+  const savedMembers=(saved&&Array.isArray(saved.members)?saved.members:[])
+    .filter(member=>!removedMembers.has(String(member&&member.name||"").trim().toUpperCase()));
   const hasOldStarterMembers=savedMembers.length===oldStarterMembers.length&&
     savedMembers.every((member,index)=>member&&member.name===oldStarterMembers[index].name&&
       member.role===oldStarterMembers[index].role&&member.description===oldStarterMembers[index].description);
