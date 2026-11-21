@@ -223,8 +223,11 @@ const defaults = {
   },
   members:[
     {name:"OPAL",role:"Leader",description:"",photo:"foto inti/OPAL.jpeg"},
+    {name:"KALZ",role:"Leader",description:"",photo:""},
     {name:"FAD",role:"Leader",description:"",photo:"foto inti/FAD1.png"},
+    {name:"KOTEL",role:"Inti Access",description:"",photo:""},
     {name:"ARYA",role:"Inti Access",description:"",photo:"foto inti/arya.jpeg"},
+    {name:"ARYA WINATA",role:"Inti Access",description:"",photo:""},
     {name:"ATHALLAH",role:"Inti Access",description:"",photo:"foto inti/aufa.png"},
     {name:"ABRAHAM",role:"Inti Problem",description:"",photo:""},
     {name:"INTI BUILDER",role:"Inti Builder",description:"Foto menyusul",photo:""}
@@ -277,9 +280,7 @@ let data;
 try {
   const saved = JSON.parse(localStorage.getItem("teamvar_admin"));
   const savedInstagram=String(saved&&saved.contact&&saved.contact.instagram||"");
-  const removedMembers=new Set(["KALZ","KOTEL","ARYA WINATA","INTI ACCESS 01","INTI ACCESS 03"]);
-  const savedMembers=(saved&&Array.isArray(saved.members)?saved.members:[])
-    .filter(member=>!removedMembers.has(String(member&&member.name||"").trim().toUpperCase()));
+  const savedMembers=saved&&Array.isArray(saved.members)?saved.members:[];
   const hasOldStarterMembers=savedMembers.length===oldStarterMembers.length&&
     savedMembers.every((member,index)=>member&&member.name===oldStarterMembers[index].name&&
       member.role===oldStarterMembers[index].role&&member.description===oldStarterMembers[index].description);
@@ -319,8 +320,6 @@ try {
       const description=String(member.description||"");
       const defaultPhoto=name==="INTI ACCESS 02"||name==="ARYA"
         ?"foto inti/arya.jpeg"
-        :name==="INTI ACCESS 03"||name==="ARYA WINATA"?"foto inti/winata1.png"
-        :name==="INTI ACCESS 01"||name==="KOTEL"?"foto inti/KOTEL.png"
         :"";
       const isDefaultPhotoPlaceholder=!!defaultPhoto&&
         !String(member.photo||"").trim()&&description==="Foto menyusul";
@@ -330,15 +329,9 @@ try {
         description:isDefaultPhotoPlaceholder?"":description,
         photo:savedRole==="Inti Problem"
           ?""
-          :name==="KALZ"
-          ?"KALZ1.png"
-          :name==="INTI ACCESS 01"||name==="KOTEL"
-            ?"foto inti/KOTEL.png"
-          :name==="INTI ACCESS 03"||name==="ARYA WINATA"
-            ?"foto inti/winata1.png"
-            :isDefaultPhotoPlaceholder
-              ?defaultPhoto
-              :String(resolveTeamvarImage(member.photo||""))
+          :isDefaultPhotoPlaceholder
+            ?defaultPhoto
+            :String(resolveTeamvarImage(member.photo||""))
       };
     })
   } : structuredClone(defaults);
